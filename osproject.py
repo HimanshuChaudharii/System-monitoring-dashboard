@@ -457,6 +457,20 @@ monitor.start()
         frame._color = color
         
         return frame
+    class OptimizedMonitor:
+    def __init__(self, root):
+        self.root = root
+        self.cpu_label = ttk.Label(root, text="CPU: 0%", font=("Arial", 12))
+        self.cpu_label.pack()
+        self.update_metrics()
+
+    def update_metrics(self):
+        self.cpu_label.config(text=f"CPU: {psutil.cpu_percent()}%")
+        self.root.after(2000, self.update_metrics)  # Reduced update frequency
+
+root = tk.Tk()
+monitor = OptimizedMonitor(root)
+root.mainloop()
 
     def init_data_structures(self):
         self.history = {

@@ -517,6 +517,18 @@ root.mainloop()
 
         finally:
             self.root.after(self.perf_update_interval, self.update_data)
+class ThemedApp:
+    def __init__(self, root):
+        self.root = root
+        self.style = ttk.Style()
+        self.style.configure("TLabel", background="#2E2E2E", foreground="white", font=("Arial", 12))
+        self.label = ttk.Label(root, text="Dark Mode Enabled")
+        self.label.pack(pady=10)
+
+root = tk.Tk()
+root.configure(bg="#2E2E2E")
+app = ThemedApp(root)
+root.mainloop()
 
     def update_perf_graphs(self):
         for card_name, card in self.perf_cards.items():

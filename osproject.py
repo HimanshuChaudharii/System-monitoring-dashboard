@@ -81,11 +81,18 @@ root.mainloop()
         
         self.loading_window.attributes('-topmost', True)
         
-    def update_progress(self, value, message):
-        self.progress['value'] = value
-        self.percent_label.config(text=f"{int(value)}%")
-        self.message_label.config(text=message)
-        self.loading_window.update_idletasks()
+   class LoadingScreen:
+    def __init__(self, root):
+        self.root = root
+        self.progress = ttk.Progressbar(root, mode="determinate", length=200)
+        self.progress.pack(pady=10)
+        self.root.after(100, self.update_progress)
+
+    def update_progress(self):
+        for i in range(1, 101, 10):
+            self.progress["value"] = i
+            self.root.update()
+            time.sleep(0.2)
         
     def close(self):
         for i in range(5, 0, -1):

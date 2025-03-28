@@ -81,17 +81,41 @@ root.mainloop()
         
         self.loading_window.attributes('-topmost', True)
         
-    def update_progress(self, value, message):
-        self.progress['value'] = value
-        self.percent_label.config(text=f"{int(value)}%")
-        self.message_label.config(text=message)
-        self.loading_window.update_idletasks()
+   class LoadingScreen:
+    def __init__(self, root):
+        self.root = root
+        self.progress = ttk.Progressbar(root, mode="determinate", length=200)
+        self.progress.pack(pady=10)
+        self.root.after(100, self.update_progress)
+
+    def update_progress(self):
+        for i in range(1, 101, 10):
+            self.progress["value"] = i
+            self.root.update()
+            time.sleep(0.2)
         
     def close(self):
         for i in range(5, 0, -1):
             self.loading_window.attributes('-alpha', i/5)
             time.sleep(0.05)
         self.loading_window.destroy()
+class ProcessManager:
+    def __init__(self, frame):
+        self.tree = ttk.Treeview(frame, columns=("PID", "Name", "CPU%", "Memory"), show="headings")
+        for col in ("PID", "Name", "CPU%", "Memory"):
+            self.tree.heading(col, text=col)
+        self.tree.pack(fill="both", expand=True)
+        self.update_processes()
+
+    def update_processes(self):
+        for row in self.tree.get_children():
+            self.tree.delete(row)
+        for proc in psutil.process_iter(["pid", "name", "cpu_percent", "memory_percent"]):
+            self.tree.insert("", "end", values=(proc.info["pid"], proc.info["name"], proc.info["cpu_percent"], proc.info["memory_percent"]))
+
+frame = tk.Tk()
+process_manager = ProcessManager(frame)
+frame.mainloop()
 
 class TaskManagerStyleMonitor:
     def __init__(self, root: tk.Tk):

@@ -570,6 +570,21 @@ root.mainloop()
                 card.detail_label.config(text=detail_text)
             
             card._canvas.draw()
+class ErrorHandledMonitor:
+    def __init__(self, root):
+        self.root = root
+        try:
+            self.cpu_usage = psutil.cpu_percent()
+            self.label = ttk.Label(root, text=f"CPU: {self.cpu_usage}%", font=("Arial", 12))
+            self.label.pack()
+        except Exception as e:
+            self.label = ttk.Label(root, text="Error retrieving data", font=("Arial", 12))
+            self.label.pack()
+
+root = tk.Tk()
+monitor = ErrorHandledMonitor(root)
+root.mainloop()
+
 
     def sort_processes(self, column):
         if self.sort_column == column:

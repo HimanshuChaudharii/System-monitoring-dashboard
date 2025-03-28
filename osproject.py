@@ -338,7 +338,24 @@ class TaskManagerStyleMonitor:
             
             details_frame.columnconfigure(0, weight=0)
             details_frame.columnconfigure(1, weight=1)
+class PerformanceMonitor:
+    def __init__(self):
+        self.fig, self.ax = plt.subplots()
+        self.cpu_data = []
 
+    def update_graph(self, frame):
+        self.cpu_data.append(psutil.cpu_percent())
+        self.cpu_data = self.cpu_data[-50:]
+        self.ax.clear()
+        self.ax.plot(self.cpu_data, label="CPU Usage (%)")
+        self.ax.legend()
+
+    def start(self):
+        ani = FuncAnimation(self.fig, self.update_graph, interval=1000)
+        plt.show()
+
+monitor = PerformanceMonitor()
+monitor.start()
     def get_system_info(self):
         gpu_info = "Not detected"
         try:

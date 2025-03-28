@@ -279,6 +279,17 @@ class TaskManagerStyleMonitor:
         self.perf_tab.grid_columnconfigure(1, weight=1)
         self.perf_tab.grid_rowconfigure(0, weight=1)
         self.perf_tab.grid_rowconfigure(1, weight=1)
+        class SystemInfo:
+    def __init__(self, root):
+        self.label = ttk.Label(root, text=self.get_system_info(), font=("Arial", 12))
+        self.label.pack(pady=10)
+
+    def get_system_info(self):
+        return f"OS: {platform.system()} {platform.release()}\nCPU: {psutil.cpu_count()} Cores"
+
+root = tk.Tk()
+info_panel = SystemInfo(root)
+root.mainloop()
 
     def setup_system_details_tab(self):
         main_frame = ttk.Frame(self.sys_tab)
